@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import ru.kata.spring.boot_security.demo.entity.MyUser;
-import ru.kata.spring.boot_security.demo.repo.UserRepository;
+import ru.kata.spring.boot_security.demo.entity.Users;
+import ru.kata.spring.boot_security.demo.repo.AdminRepository;
 
 
 import java.security.Principal;
@@ -13,17 +13,17 @@ import java.security.Principal;
 @Controller
 public class UserController {
 
-    private UserRepository userRepository;
+    private AdminRepository adminRepository;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(AdminRepository adminRepository) {
+        this.adminRepository = adminRepository;
     }
 
     @GetMapping("/user")
     public String getUserInfo(Principal principal, Model model) {
-        MyUser myUser = userRepository.findByUsername(principal.getName());
-        model.addAttribute("user", myUser);
+        Users users = adminRepository.findByUsername(principal.getName());
+        model.addAttribute("users", users);
         return "user";
     }
 }

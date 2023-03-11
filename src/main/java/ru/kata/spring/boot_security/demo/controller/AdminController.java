@@ -4,69 +4,73 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.entity.MyUser;
+import ru.kata.spring.boot_security.demo.entity.Users;
 import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.repo.RoleRepository;
-import ru.kata.spring.boot_security.demo.repo.UserRepository;
-import ru.kata.spring.boot_security.demo.service.CustomUserDetailsService;
+import ru.kata.spring.boot_security.demo.service.AdminServiceImp;
+import ru.kata.spring.boot_security.demo.service.RoleServiceImp;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 public class AdminController {
 
-    private CustomUserDetailsService customUserDetailsService;
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
+    private AdminServiceImp adminServiceImp;
+    private RoleServiceImp roleServiceImp;
 
     @Autowired
-    public AdminController(CustomUserDetailsService customUserDetailsService, UserRepository userRepository, RoleRepository roleRepository) {
-        this.customUserDetailsService = customUserDetailsService;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+    public AdminController(AdminServiceImp adminServiceImp, RoleServiceImp roleServiceImp) {
+        this.adminServiceImp = adminServiceImp;
+        this.roleServiceImp = roleServiceImp;
     }
 
     @GetMapping("/admin")
     public String getUsers(Model model) {
-        Iterable<MyUser> users = userRepository.findAll();
+        Iterable<Users> users = adminServiceImp.findAll();
         model.addAttribute("users", users);
         return "admin";
     }
 
     @GetMapping("/admin/addUser")
-    public String addUser(Model model) {
+    public String addUser(@ModelAttribute("user") Users user, Model model) {
+
+
+        model.addAttribute("roles",roleServiceImp.findAll());
         return "addUser";
     }
 
     @PostMapping("/admin/addUser")
-    public String addUser(@ModelAttribute("user") MyUser user, @ModelAttribute("role") Role role) {
-        roleRepository.save(role);
-        userRepository.save(user);
+    public String addUser(@ModelAttribute ("user") Users users) {
+
+        adminServiceImp.save(users);
         return "redirect:/admin";
 
     }
 
     @GetMapping("/admin/{id}/delete")
     public String deleteUser(@PathVariable(value = "id") long id, Model model) {
-        MyUser user = userRepository.findById(id).orElseThrow();
-        userRepository.delete(user);
+        Users users = adminServiceImp.findById(id).orElseThrow();
+        adminServiceImp.delete(users);
         return "redirect:/admin";
     }
 
     @GetMapping("/admin/{id}/edit")
     public String editUser(@PathVariable(value = "id") long id, Model model) {
-        Optional<MyUser> user = userRepository.findById(id);
-        ArrayList<MyUser> res = new ArrayList<>();
-        user.ifPresent(res::add);
-        model.addAttribute("user", res);
+
+        Users userEdit = adminServiceImp.findById(id).orElseThrow();
+        model.addAttribute("userEdit", userEdit);
+        model.addAttribute("rolesEdit", roleServiceImp.findAll());
+
         return "editUser";
     }
 
     @PostMapping("/admin/{id}/edit")
-    public String editUser(@PathVariable(value = "id") long id, @ModelAttribute("user") MyUser user, @ModelAttribute("role") Role role) {
-        roleRepository.save(role);
-        userRepository.save(user);
+    public String editUser(@PathVariable(value = "id") long id, @ModelAttribute("user") Users users, @ModelAttribute("role") Role role) {
+        roleServiceImp.save(role);
+        adminServiceImp.save(users);
         return "redirect:/admin";
     }
 }

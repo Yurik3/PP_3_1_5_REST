@@ -8,11 +8,22 @@
 <body>
 <header th:insert="header::header"></header>
 <br>
-<form actinion="/admin/addUser" method="post">
-    <input type="text" name="username" placeholder="Введите имя пользователя" class="form-control">
-    <input type="text" name="password" placeholder="Введите пароль" class="form-control">
-    <input type="text" name="email" placeholder="Введите почту" class="form-control"><br>
-    <input type="text" name="name" placeholder="Введите права доступа" class="form-control"><br>
+
+<form th:method="post"  th:object="${user}" >
+    <input type="text"  th:field="*{username}"   placeholder="Введите имя пользователя" class="form-control">
+    <input type="text" th:field="*{password}" placeholder="Введите пароль" class="form-control">
+    <input type="text" th:field="*{email}" placeholder="Введите почту" class="form-control"><br>
+
+    <p>
+        <label>Выберете роль:
+            <input type="checkbox"
+                   th:each="role : ${roles}"
+                   th:text="${role.getName()}"
+                   th:value="${role.getId()}"
+                   th:field="*{roles}"
+            />
+        </label>
+    </p>
     <button type="submit" class="btn btn-success">Создать</button>
 </form>
 </body>

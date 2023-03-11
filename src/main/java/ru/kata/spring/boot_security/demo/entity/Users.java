@@ -1,5 +1,7 @@
 package ru.kata.spring.boot_security.demo.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -9,17 +11,30 @@ import java.util.Set;
 
 @Entity
 @Table(name = "usersecurity")
-public class MyUser implements UserDetails {
+public class Users implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
     private String username;
     private String password;
     private String email;
-    @ManyToMany(fetch = FetchType.EAGER)
+
+    public Users(long id, String username, String password, String email, Set<Role> roles) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.roles = roles;
+    }
+
+    @ManyToMany
+    @Fetch(FetchMode.JOIN)
+    @JoinTable(name = "users_roles",
+            joinColumns = {@JoinColumn(name = "usersecurity_id")},
+            inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private Set<Role> roles;
 
-    public MyUser() {
+    public Users() {
     }
 
 
@@ -31,7 +46,7 @@ public class MyUser implements UserDetails {
         this.id = id;
     }
 
-    public MyUser(String username, String password, String email) {
+    public Users(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;

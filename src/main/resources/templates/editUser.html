@@ -8,20 +8,35 @@
 <body>
 <header th:insert="header::header"></header>
 <br>
-<div th:each="el:${user}">
-    <form method="post">
-        <input type="text" th:value="${el.username}" name="username" placeholder="Введите новое имя пользователя"
-               class="form-control">
-        <input type="text" th:value="${el.password}" name="password" placeholder="Введите новый пароль"
-               class="form-control">
-        <input type="text" th:value="${el.email}" name="email" placeholder="Введите новую почту"
-               class="form-control">
-        <input type="text" th:each="role : ${el.roles}" th:value="${role.name}" name="name"
-               placeholder="Введите права доступа"
-               class="form-control"><br>
+    <form th:method="post"   th:object="${userEdit}" >
+
+
+        <input type="text" th:value="${username}" th:field="*{username}" class="form-control" >
+        <input type="text" th:value="${password}" th:field="*{password}" class="form-control" >
+        <input type="text" th:value="${email}" th:field="*{email}" class="form-control" ><br>
+
+        <p>
+            <label>Выберете роль:
+                <input type="checkbox"
+                       th:each="role : ${rolesEdit}"
+                       th:text="${role.getName()}"
+                       th:value="${role.getId()}"
+                       th:field="*{roles}"
+                />
+            </label>
+        </p>
+
+
+<!--        <input type="text" th:value="${}"  placeholder="Введите новое имя пользователя"-->
+<!--               class="form-control">-->
+
+
         <button type="submit" class="btn btn-success">Обновить</button>
 
+
+
+
     </form>
-</div>
+
 </body>
 </html>

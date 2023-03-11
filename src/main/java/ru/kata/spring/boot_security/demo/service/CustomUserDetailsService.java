@@ -1,31 +1,29 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.kata.spring.boot_security.demo.entity.MyUser;
-import ru.kata.spring.boot_security.demo.repo.UserRepository;
+import ru.kata.spring.boot_security.demo.entity.Users;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    private final UserRepository userRepository;
+    private final AdminServiceImp adminServiceImp;
 
     @Autowired
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public CustomUserDetailsService(AdminServiceImp adminServiceImp) {
+        this.adminServiceImp = adminServiceImp;
     }
 
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        MyUser myUser = userRepository.findByUsername(username);
-        if (myUser == null) {
+        Users users = adminServiceImp.findByUsername(username);
+        if (users == null) {
             throw new UsernameNotFoundException("Пользователь не найден: " + username);
         }
-        return new User(myUser.getUsername(), myUser.getPassword(), myUser.getAuthorities());
+        return new org.springframework.security.core.userdetails.User(users.getUsername(), users.getPassword(), users.getAuthorities());
     }
 
 }
