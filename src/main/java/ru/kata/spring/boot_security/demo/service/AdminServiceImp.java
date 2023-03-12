@@ -2,13 +2,15 @@ package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.kata.spring.boot_security.demo.entity.Users;
+import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.repo.AdminRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class AdminServiceImp implements AdminService {
 
     private final AdminRepository adminRepository;
@@ -20,28 +22,28 @@ public class AdminServiceImp implements AdminService {
 
 
     @Override
-    public List<Users> findAll() {
-        List <Users> users = (List<Users>) adminRepository.findAll();
+    public List<User> findAll() {
+        List <User> users = (List<User>) adminRepository.findAll();
         return users;
     }
 
     @Override
-    public Optional<Users> findById(Long id) {
+    public Optional<User> findById(Long id) {
         return adminRepository.findById(id);
     }
 
     @Override
-    public void delete(Users users) {
-        adminRepository.delete(users);
+    public void delete(User user) {
+        adminRepository.delete(user);
 
     }
 
     @Override
-    public void save(Users users) {
-        adminRepository.save(users);
+    public void save(User user) {
+        adminRepository.save(user);
     }
 
-   public Users findByUsername(String username) {
+   public User findByUsername(String username) {
         return adminRepository.findByUsername(username);
     }
 }

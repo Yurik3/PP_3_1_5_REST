@@ -4,16 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.entity.Users;
+import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.entity.Role;
-import ru.kata.spring.boot_security.demo.repo.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.AdminServiceImp;
 import ru.kata.spring.boot_security.demo.service.RoleServiceImp;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @Controller
 public class AdminController {
@@ -29,13 +23,13 @@ public class AdminController {
 
     @GetMapping("/admin")
     public String getUsers(Model model) {
-        Iterable<Users> users = adminServiceImp.findAll();
+        Iterable<User> users = adminServiceImp.findAll();
         model.addAttribute("users", users);
         return "admin";
     }
 
     @GetMapping("/admin/addUser")
-    public String addUser(@ModelAttribute("user") Users user, Model model) {
+    public String addUser(@ModelAttribute("user") User user, Model model) {
 
 
         model.addAttribute("roles",roleServiceImp.findAll());
@@ -43,24 +37,24 @@ public class AdminController {
     }
 
     @PostMapping("/admin/addUser")
-    public String addUser(@ModelAttribute ("user") Users users) {
+    public String addUser(@ModelAttribute ("user") User user) {
 
-        adminServiceImp.save(users);
+        adminServiceImp.save(user);
         return "redirect:/admin";
 
     }
 
     @GetMapping("/admin/{id}/delete")
     public String deleteUser(@PathVariable(value = "id") long id, Model model) {
-        Users users = adminServiceImp.findById(id).orElseThrow();
-        adminServiceImp.delete(users);
+        User user = adminServiceImp.findById(id).orElseThrow();
+        adminServiceImp.delete(user);
         return "redirect:/admin";
     }
 
     @GetMapping("/admin/{id}/edit")
     public String editUser(@PathVariable(value = "id") long id, Model model) {
 
-        Users userEdit = adminServiceImp.findById(id).orElseThrow();
+        User userEdit = adminServiceImp.findById(id).orElseThrow();
         model.addAttribute("userEdit", userEdit);
         model.addAttribute("rolesEdit", roleServiceImp.findAll());
 
@@ -68,9 +62,9 @@ public class AdminController {
     }
 
     @PostMapping("/admin/{id}/edit")
-    public String editUser(@PathVariable(value = "id") long id, @ModelAttribute("user") Users users, @ModelAttribute("role") Role role) {
+    public String editUser(@PathVariable(value = "id") long id, @ModelAttribute("user") User user, @ModelAttribute("role") Role role) {
         roleServiceImp.save(role);
-        adminServiceImp.save(users);
+        adminServiceImp.save(user);
         return "redirect:/admin";
     }
 }

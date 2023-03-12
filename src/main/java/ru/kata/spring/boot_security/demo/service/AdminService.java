@@ -1,19 +1,19 @@
 package ru.kata.spring.boot_security.demo.service;
 
-import ru.kata.spring.boot_security.demo.entity.Users;
+import ru.kata.spring.boot_security.demo.entity.User;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface AdminService {
 
-    public List<Users> findAll();
+    public List<User> findAll();
 
-    public Optional<Users> findById(Long id);
+    public Optional<User> findById(Long id);
 
-    public void delete(Users users);
+    public void delete(User user);
 
-    public void save(Users users);
+    public void save(User user);
 
-    Users findByUsername(String username);
+    User findByUsername(String username);
 }

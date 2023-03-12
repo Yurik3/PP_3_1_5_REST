@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "usersecurity")
-public class Users implements UserDetails {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -19,7 +19,7 @@ public class Users implements UserDetails {
     private String password;
     private String email;
 
-    public Users(long id, String username, String password, String email, Set<Role> roles) {
+    public User(long id, String username, String password, String email, Set<Role> roles) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -28,13 +28,12 @@ public class Users implements UserDetails {
     }
 
     @ManyToMany
-    @Fetch(FetchMode.JOIN)
     @JoinTable(name = "users_roles",
             joinColumns = {@JoinColumn(name = "usersecurity_id")},
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private Set<Role> roles;
 
-    public Users() {
+    public User() {
     }
 
 
@@ -46,7 +45,7 @@ public class Users implements UserDetails {
         this.id = id;
     }
 
-    public Users(String username, String password, String email) {
+    public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;

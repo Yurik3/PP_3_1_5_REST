@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.kata.spring.boot_security.demo.entity.Users;
+import ru.kata.spring.boot_security.demo.entity.User;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -19,11 +19,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Users users = adminServiceImp.findByUsername(username);
-        if (users == null) {
+        User user = adminServiceImp.findByUsername(username);
+        if (user == null) {
             throw new UsernameNotFoundException("Пользователь не найден: " + username);
         }
-        return new org.springframework.security.core.userdetails.User(users.getUsername(), users.getPassword(), users.getAuthorities());
+        return  user;
     }
 
 }
