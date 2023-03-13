@@ -6,24 +6,26 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.entity.Role;
+import ru.kata.spring.boot_security.demo.service.AdminService;
 import ru.kata.spring.boot_security.demo.service.AdminServiceImp;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.RoleServiceImp;
 
 @Controller
 public class AdminController {
 
-    private AdminServiceImp adminServiceImp;
-    private RoleServiceImp roleServiceImp;
+    private AdminService adminService;
+    private RoleService roleService;
 
     @Autowired
-    public AdminController(AdminServiceImp adminServiceImp, RoleServiceImp roleServiceImp) {
-        this.adminServiceImp = adminServiceImp;
-        this.roleServiceImp = roleServiceImp;
+    public AdminController(AdminService adminService, RoleService roleService) {
+        this.adminService = adminService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/admin")
     public String getUsers(Model model) {
-        Iterable<User> users = adminServiceImp.findAll();
+        Iterable<User> users = adminService.findAll();
         model.addAttribute("users", users);
         return "admin";
     }
@@ -32,39 +34,39 @@ public class AdminController {
     public String addUser(@ModelAttribute("user") User user, Model model) {
 
 
-        model.addAttribute("roles",roleServiceImp.findAll());
+        model.addAttribute("roles",roleService.findAll());
         return "addUser";
     }
 
     @PostMapping("/admin/addUser")
     public String addUser(@ModelAttribute ("user") User user) {
 
-        adminServiceImp.save(user);
+        adminService.save(user);
         return "redirect:/admin";
 
     }
 
     @GetMapping("/admin/{id}/delete")
     public String deleteUser(@PathVariable(value = "id") long id, Model model) {
-        User user = adminServiceImp.findById(id).orElseThrow();
-        adminServiceImp.delete(user);
+        User user = adminService.findById(id).orElseThrow();
+        adminService.delete(user);
         return "redirect:/admin";
     }
 
     @GetMapping("/admin/{id}/edit")
     public String editUser(@PathVariable(value = "id") long id, Model model) {
 
-        User userEdit = adminServiceImp.findById(id).orElseThrow();
+        User userEdit = adminService.findById(id).orElseThrow();
         model.addAttribute("userEdit", userEdit);
-        model.addAttribute("rolesEdit", roleServiceImp.findAll());
+        model.addAttribute("rolesEdit", roleService.findAll());
 
         return "editUser";
     }
 
     @PostMapping("/admin/{id}/edit")
     public String editUser(@PathVariable(value = "id") long id, @ModelAttribute("user") User user, @ModelAttribute("role") Role role) {
-        roleServiceImp.save(role);
-        adminServiceImp.save(user);
+        roleService.save(role);
+        adminService.save(user);
         return "redirect:/admin";
     }
 }
