@@ -19,12 +19,17 @@ public class User implements UserDetails {
     private String password;
     private String email;
 
-    public User(long id, String username, String password, String email, Set<Role> roles) {
+    private String userLastName;
+    private int age;
+
+    public User(long id, String username, String password, String email, int age, String userLastName, Set<Role> roles) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.roles = roles;
+        this.age = age;
+        this.userLastName =userLastName;
     }
 
     @ManyToMany
@@ -45,10 +50,28 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public User(String username, String password, String email) {
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getUserLastName() {
+        return userLastName;
+    }
+
+    public void setUserLastName(String userLastName) {
+        this.userLastName = userLastName;
+    }
+
+    public User(String username, String password, String email, String userLastName, int age) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.age =age;
+        this.userLastName = userLastName;
 
     }
 
@@ -110,5 +133,13 @@ public class User implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public String roleToString(){
+        StringBuilder sb = new StringBuilder();
+        for(Role role: roles){
+            sb.append(role.getName()).append(" ");
+        }
+        return sb.toString();
     }
 }

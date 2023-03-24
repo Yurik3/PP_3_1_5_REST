@@ -4,28 +4,82 @@
 <head>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <meta charset="UTF-8">
-    <title>Главная страница</title>
+    <title>Страница пользователя</title>
 </head>
 <body>
-<header th:insert="header::header"></header>
-<div class="container mt-5">
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Имя</th>
-            <th>Пароль</th>
-            <th>Почта</th>
-        </tr>
-        </thead>
-        <tbody th:each="el : ${users}">
-        <tr>
-            <td th:text="${el.username}"/>
-            <td th:text="${el.password}"/>
-            <td th:text="${el.email}"/>
-        </tr>
-        </tr>
-        </tbody>
-    </table>
-</div>
+<header>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <div class="navbar-brand d-flex align-items-center">
+                <span th:text="${auser.getEmail()}">  VALUE </span>
+                &nbsp with roles:&nbsp <span th:text="${auser.roleToString()}"></span>
+            </div>
+            <a class="me-3 py-2 text-white text-decoration-none" href="/logout">Выйти</a>
+        </div>
+    </div>
+</header>
+<div class="container-fluid h-100"> <!--Общий блок-->
+    <div class="row g-0"> <!--Строка-->
+        <div class="col-md-2" style="margin-top:15px"> <!--Левая колонка-->
+            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" href="#v-pills-profile" role="tab"
+                   aria-controls="v-pills-profile" aria-selected="false">Пользователь</a>
+            </div>
+        </div> <!--Левая колонка-->
+
+        <div class="col-md-10"> <!--Правая колонка-->
+            <div class="container-fluid bg-light min-vh-100 px-4">
+                <div class="tab-content" id="v-pills-tabContent"><!--Блок всплывающего окна -->
+
+                    <div class="tab-pane fade show active" id="user" role="tabpanel"
+                         aria-labelledby="v-pills-home-tab">
+                        <!--Блок всплывающего окна таблицы пользователей-->
+
+                        <h1>Страница информации о пользователе</h1>
+
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="allUsers" role="tabpanel"
+                                 aria-labelledby="home-tab">
+                                <div class="card">
+                                    <h5 class="card-header">Информация пользователя</h5>
+                                    <div class="card-body">
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>№ п/п</th>
+                                                <th>Имя</th>
+                                                <th>Фамилия</th>
+                                                <th>Возраст</th>
+                                                <th>Почта</th>
+                                                <th>Права</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody th:each="el : ${auser}">
+                                            <tr>
+                                                <td th:text="${el.id}"/>
+                                                <td th:text="${el.username}"/>
+                                                <td th:text="${el.userLastName}"/>
+                                                <td th:text="${el.age}"/>
+                                                <td th:text="${el.email}"/>
+                                                <td th:each="role : ${el.roles}" th:text="${role.name}"/>
+                                            </tr>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div> <!--Блок всплывающего окна №2-->
+
+                </div><!--Блок всплывающего окна -->
+            </div>
+        </div> <!--Правая колонка-->
+    </div> <!--Строка-->
+
+
+</div> <!--Общий блок-->
 </body>
 </html>

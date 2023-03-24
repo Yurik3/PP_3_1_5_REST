@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.entity.User;
 import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.service.AdminService;
-import ru.kata.spring.boot_security.demo.service.AdminServiceImp;
 import ru.kata.spring.boot_security.demo.service.RoleService;
-import ru.kata.spring.boot_security.demo.service.RoleServiceImp;
+
+import java.security.Principal;
+import java.util.Optional;
 
 @Controller
 public class AdminController {
@@ -24,29 +25,29 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public String getUsers(Model model) {
+    public String getUsers(Principal principal,Model model) {
         Iterable<User> users = adminService.findAll();
         model.addAttribute("users", users);
-        return "admin";
-    }
-
-    @GetMapping("/admin/addUser")
-    public String addUser(@ModelAttribute("user") User user, Model model) {
-
-
+        model.addAttribute("newUser",new User());
         model.addAttribute("roles",roleService.findAll());
-        return "addUser";
+
+        User user = adminService.findByUsername(principal.getName());
+        model.addAttribute("user", user);
+
+        User admin = adminService.findByUsername(principal.getName());
+        model.addAttribute("admin", admin);
+        return "adminPanel";
     }
 
-    @PostMapping("/admin/addUser")
-    public String addUser(@ModelAttribute ("user") User user) {
 
+    @PostMapping("/admin")
+    public String addUser(@ModelAttribute ("user") User user) {
         adminService.save(user);
         return "redirect:/admin";
 
     }
 
-    @GetMapping("/admin/{id}/delete")
+    @GetMapping("/admin/{id}")
     public String deleteUser(@PathVariable(value = "id") long id, Model model) {
         User user = adminService.findById(id).orElseThrow();
         adminService.delete(user);
@@ -60,7 +61,7 @@ public class AdminController {
         model.addAttribute("userEdit", userEdit);
         model.addAttribute("rolesEdit", roleService.findAll());
 
-        return "editUser";
+        return "redirect:/admin";
     }
 
     @PostMapping("/admin/{id}/edit")
