@@ -42,6 +42,11 @@ public class AdminServiceImp implements AdminService {
     public void save(User user) {
         adminRepository.save(user);
     }
+    @Override
+    public void update(Long id, User updateUser) {
+        updateUser.setId(id);
+        adminRepository.save(updateUser);
+    }
 
    public User findByUsername(String username) {
         return adminRepository.findByUsername(username);

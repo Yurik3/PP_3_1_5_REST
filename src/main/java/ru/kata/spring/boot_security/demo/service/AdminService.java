@@ -15,5 +15,7 @@ public interface AdminService {
 
     public void save(User user);
 
-    User findByUsername(String username);
+   public User findByUsername(String username);
+
+   public void update(Long id, User updateUser);
 }

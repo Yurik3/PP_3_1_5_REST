@@ -22,6 +22,12 @@ public class User implements UserDetails {
     private String userLastName;
     private int age;
 
+    @ManyToMany
+    @JoinTable(name = "users_roles",
+            joinColumns = {@JoinColumn(name = "usersecurity_id")},
+            inverseJoinColumns = @JoinColumn(name = "roles_id"))
+    private Set<Role> roles;
+
     public User(long id, String username, String password, String email, int age, String userLastName, Set<Role> roles) {
         this.id = id;
         this.username = username;
@@ -32,11 +38,7 @@ public class User implements UserDetails {
         this.userLastName =userLastName;
     }
 
-    @ManyToMany
-    @JoinTable(name = "users_roles",
-            joinColumns = {@JoinColumn(name = "usersecurity_id")},
-            inverseJoinColumns = @JoinColumn(name = "roles_id"))
-    private Set<Role> roles;
+
 
     public User() {
     }
